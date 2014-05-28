@@ -25,6 +25,7 @@
 /*==========pagina==========*/
 
 body{
+	height:600px;
 	background:#ddd;
 	background:url('../img/fundo.png') fixed #ddd;
 	padding:10px;

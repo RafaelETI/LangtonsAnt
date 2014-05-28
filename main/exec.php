@@ -21,15 +21,15 @@
 var LangtonsAnt=new LangtonsAnt;
 
 MitiPadrao.iniciar(function(){
-	//MitiElemento.getId('pointer_div').onclick=LangtonsAnt.point_it(event);
+	MitiElemento.getTag('body')[0].onclick=function(e){
+		LangtonsAnt.criarFormiga(e);
+	};
 });
 </script>
 </head>
 <!--==========neck==========-->
 <body>
 <div id="geral">
-<div id="painel" onclick="LangtonsAnt.criarFormiga(event)"></div>
-
 X: <span id="x"></span><br />
 Y: <span id="y"></span>
 </div>

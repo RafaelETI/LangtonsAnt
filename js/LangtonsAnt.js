@@ -1,6 +1,6 @@
 function LangtonsAnt(){
-	this.criarFormiga=function(event){
-		MitiElemento.getId('x').innerHTML=event.pageX;
-		MitiElemento.getId('y').innerHTML=event.pageY;
+	this.criarFormiga=function(e){
+		MitiElemento.getId('x').innerHTML=e.pageX;
+		MitiElemento.getId('y').innerHTML=e.pageY;
 	};
 }
