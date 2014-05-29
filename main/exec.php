@@ -21,17 +21,18 @@
 var LangtonsAnt=new LangtonsAnt;
 
 MitiPadrao.iniciar(function(){
-	MitiElemento.getTag('body')[0].onclick=function(e){
-		LangtonsAnt.criarFormiga(e);
+	MitiElemento.getId('painel').onclick=function(e){
+		LangtonsAnt.criarFormiga(e,this);
 	};
 });
 </script>
 </head>
 <!--==========neck==========-->
 <body>
-<div id="geral">
-X: <span id="x"></span><br />
-Y: <span id="y"></span>
-</div>
+<canvas id="painel" width="1000" height="500">
+	O seu navegador não suporta canvas.
+</canvas>
+
+Iterações: <span id="iteracoes">0</span>
 </body>
 </html>
