@@ -28,7 +28,7 @@ var LangtonsAnt=new LangtonsAnt;
 	Formigas: <span id="quantidade"></span> &bull;
 	Iterações: <span id="iteracao"></span> &bull;
 	Segundos: <span id="segundo"></span> &bull;
-	Iterações do último segundo: <span id="velocidade"></span>
+	Velocidade: <span id="velocidade"></span>
 </div>
 </body>
 </html>
