@@ -1,5 +1,16 @@
 function LangtonsAnt(){
 	this.quantidade=0;
+	this.maximoX;
+	this.maximoY;
+	
+	MitiPadrao.iniciar(function(){
+		MitiElemento.getTag('canvas')[0].onclick=function(e){
+			LangtonsAnt.maximoX=e.currentTarget.clientWidth-1;
+			LangtonsAnt.maximoY=e.currentTarget.clientHeight-1;
+			
+			LangtonsAnt.criarFormiga(e,this);
+		};
+	});
 	
 	this.criarFormiga=function(e,painel){
 		this.quantidade++;
@@ -11,7 +22,9 @@ function LangtonsAnt(){
 		var Iteracao=MitiElemento.getId('iteracao');
 		var i=0;
 		var Context=painel.getContext('2d');
-		var Movimento={cima:false,direita:false,baixo:true,esquerda:false};
+		
+		var Movimento={cima:false,direita:false,baixo:false,esquerda:false};
+		this.definirDirecaoInicial(Movimento);
 		
 		var CoordenadaAtual={x:e.pageX,y:e.pageY};
 		var pixel=Context.getImageData(CoordenadaAtual.x,CoordenadaAtual.y,1,1).data;
@@ -27,6 +40,7 @@ function LangtonsAnt(){
 					LangtonsAnt.colorir(Context,'white',UltimaCoordenada);
 				}else{
 					LangtonsAnt.andarParaEsquerda(CoordenadaAtual,Movimento);
+					LangtonsAnt.teleportar(CoordenadaAtual,pixel);
 					pixel=Context.getImageData(CoordenadaAtual.x,CoordenadaAtual.y,1,1).data;
 					LangtonsAnt.colorir(Context,'red',CoordenadaAtual);
 					LangtonsAnt.colorir(Context,'black',UltimaCoordenada);
@@ -41,10 +55,17 @@ function LangtonsAnt(){
 		);
 	};
 	
+	this.teleportar=function(CoordenadaAtual,pixel){
+		if(pixel[1]===0){
+			CoordenadaAtual.x=Math.floor((Math.random()*this.maximoX)+1);
+			CoordenadaAtual.y=Math.floor((Math.random()*this.maximoY)+1);
+		}
+	};
+	
 	this.andarParaDireita=function(CoordenadaAtual,Movimento){
 		if(Movimento.esquerda===true){
 			if(CoordenadaAtual.y===0){
-				CoordenadaAtual.y=495;
+				CoordenadaAtual.y=this.maximoY;
 			}else{
 				CoordenadaAtual.y--;
 			}
@@ -52,7 +73,7 @@ function LangtonsAnt(){
 			Movimento.esquerda=false;
 			Movimento.cima=true;
 		}else if(Movimento.cima===true){
-			if(CoordenadaAtual.x===995){
+			if(CoordenadaAtual.x===this.maximoX){
 				CoordenadaAtual.x=0;
 			}else{
 				CoordenadaAtual.x++;
@@ -61,7 +82,7 @@ function LangtonsAnt(){
 			Movimento.cima=false;
 			Movimento.direita=true;
 		}else if(Movimento.direita===true){
-			if(CoordenadaAtual.y===495){
+			if(CoordenadaAtual.y===this.maximoY){
 				CoordenadaAtual.y=0;
 			}else{
 				CoordenadaAtual.y++;
@@ -71,7 +92,7 @@ function LangtonsAnt(){
 			Movimento.baixo=true;
 		}else if(Movimento.baixo===true){
 			if(CoordenadaAtual.x===0){
-				CoordenadaAtual.x=995;
+				CoordenadaAtual.x=this.maximoX;
 			}else{
 				CoordenadaAtual.x--;
 			}
@@ -83,7 +104,7 @@ function LangtonsAnt(){
 	
 	this.andarParaEsquerda=function(CoordenadaAtual,Movimento){
 		if(Movimento.esquerda===true){
-			if(CoordenadaAtual.y===495){
+			if(CoordenadaAtual.y===this.maximoY){
 				CoordenadaAtual.y=0;
 			}else{
 				CoordenadaAtual.y++;
@@ -93,7 +114,7 @@ function LangtonsAnt(){
 			Movimento.baixo=true;
 		}else if(Movimento.cima===true){
 			if(CoordenadaAtual.x===0){
-				CoordenadaAtual.x=995;
+				CoordenadaAtual.x=this.maximoX;
 			}else{
 				CoordenadaAtual.x--;
 			}
@@ -102,7 +123,7 @@ function LangtonsAnt(){
 			Movimento.esquerda=true;
 		}else if(Movimento.direita===true){
 			if(CoordenadaAtual.y===0){
-				CoordenadaAtual.y=495;
+				CoordenadaAtual.y=this.maximoY;
 			}else{
 				CoordenadaAtual.y--;
 			}
@@ -110,7 +131,7 @@ function LangtonsAnt(){
 			Movimento.direita=false;
 			Movimento.cima=true;
 		}else if(Movimento.baixo===true){
-			if(CoordenadaAtual.x===995){
+			if(CoordenadaAtual.x===this.maximoX){
 				CoordenadaAtual.x=0;
 			}else{
 				CoordenadaAtual.x++;
@@ -147,5 +168,19 @@ function LangtonsAnt(){
 			
 			,1000
 		);
+	};
+	
+	this.definirDirecaoInicial=function(Movimento){
+		var aleatorio=Math.floor((Math.random()*4)+1);
+		
+		if(aleatorio===1){
+			Movimento.cima=true;
+		}else if(aleatorio===2){
+			Movimento.direita=true;
+		}else if(aleatorio===3){
+			Movimento.baixo=true;
+		}else if(aleatorio===4){
+			Movimento.esquerda=true;
+		}
 	};
 }

@@ -19,25 +19,19 @@
 <script src="../js/LangtonsAnt.js"></script>
 <script>
 var LangtonsAnt=new LangtonsAnt;
-
-MitiPadrao.iniciar(function(){
-	MitiElemento.getId('painel').onclick=function(e){
-		LangtonsAnt.criarFormiga(e,this);
-	};
-});
 </script>
 </head>
 <!--==========neck==========-->
 <body>
-<canvas id="painel" width="1000" height="500">
+<canvas width="700" height="500">
 	O seu navegador não suporta canvas.
 </canvas>
 
-<ul>
-	<li>Formigas: <span id="quantidade"></span></li>
-	<li>Iterações: <span id="iteracao"></span></li>
-	<li>Segundos: <span id="segundo"></span></li>
-	<li>Iterações do último segundo: <span id="velocidade"></span></li>
-</ul>
+<div id="informacao">
+	Formigas: <span id="quantidade"></span> &bull;
+	Iterações: <span id="iteracao"></span> &bull;
+	Segundos: <span id="segundo"></span> &bull;
+	Iterações do último segundo: <span id="velocidade"></span>
+</div>
 </body>
 </html>
