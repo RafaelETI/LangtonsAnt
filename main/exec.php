@@ -33,6 +33,11 @@ MitiPadrao.iniciar(function(){
 	O seu navegador não suporta canvas.
 </canvas>
 
-Iterações: <span id="iteracoes">0</span>
+<ul>
+	<li>Formigas: <span id="quantidade"></span></li>
+	<li>Iterações: <span id="iteracao"></span></li>
+	<li>Segundos: <span id="segundo"></span></li>
+	<li>Iterações do último segundo: <span id="velocidade"></span></li>
+</ul>
 </body>
 </html>
