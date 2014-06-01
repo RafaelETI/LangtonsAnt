@@ -1,3 +1,13 @@
+@font-face{
+	font-family:'PressStart2P';
+	src:url('../font/PressStart2P.ttf');
+}
+
+@font-face{
+	font-family:'VT323';
+	src:url('../font/VT323.ttf');
+}
+
 *{
 	margin:0px;
 	padding:0px;
@@ -7,6 +17,7 @@ body{
 	display:none;
 	background:black;
 	color:white;
+	font:20px/20px VT323;
 }
 
 canvas{
