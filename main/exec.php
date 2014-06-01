@@ -6,11 +6,8 @@
 <title>Langton's Ant</title>
 
 <meta name="author" content="Rafael Barros" />
-
 <link rel="shortcut icon" type="image/png" href="../img/fav.png" />
-
 <link rel="stylesheet" type="text/css" href="../css/geral.css" />
-<link rel="stylesheet" type="text/css" href="../css/exec.css" />
 
 <script src="../lib/js/jquery_min.js"></script>
 <script src="../lib/js/miti/MitiPadrao.js"></script>
@@ -23,7 +20,7 @@ var LangtonsAnt=new LangtonsAnt;
 </head>
 <!--==========neck==========-->
 <body>
-<canvas width="700" height="500">
+<canvas width="700" height="450">
 	O seu navegador não suporta canvas.
 </canvas>
 
