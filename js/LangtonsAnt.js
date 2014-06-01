@@ -155,15 +155,18 @@ function LangtonsAnt(){
 		var Iteracao=MitiElemento.getId('iteracao');
 		var Segundo=MitiElemento.getId('segundo');
 		var Velocidade=MitiElemento.getId('velocidade');
-		var total=0;
-		var segundo=0;
+		var FPS=MitiElemento.getId('fps');
+		var totalDeIteracoes=0;
+		var segundos=0;
 		
 		setInterval(
 			function(){
-				Velocidade.innerHTML=Iteracao.innerHTML-total;
-				total=Iteracao.innerHTML;
+				Segundo.innerHTML=++segundos;
 				
-				Segundo.innerHTML=++segundo;
+				FPS.innerHTML=Iteracao.innerHTML-totalDeIteracoes;
+				totalDeIteracoes=Iteracao.innerHTML;
+				
+				Velocidade.innerHTML=Math.round(totalDeIteracoes/segundos);
 			}
 			
 			,1000
