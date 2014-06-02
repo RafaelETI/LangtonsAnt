@@ -12,11 +12,21 @@ body{
 	display:none;
 	background:black;
 	color:white;
-	font:20px/20px VT323;
+	font:20px/30px VT323;
 }
 
 canvas{
 	display:block;
 	background:#000;
 	border:1px solid white;
+}
+
+input{
+	background:black;
+	color:white;
+	font-family:VT323;
+}
+
+input[type="range"]{
+	width:100px;
 }
