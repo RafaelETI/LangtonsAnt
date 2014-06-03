@@ -6,24 +6,32 @@ function LangtonsAnt(){
 	this.quantidadeFilhotes=0;
 	this.maximoX;
 	this.maximoY;
+	this.tamanho;
 	
 	MitiPadrao.iniciar(function(){
 		alert('Clique para criar formigas.');
-		
-		LangtonsAnt.intervalo=MitiElemento.getId('intervalo').value;
+		LangtonsAnt.obterControles();
+		LangtonsAnt.anexarEventosAosControles();
+	});
+	
+	this.obterControles=function(){
+		this.intervalo=MitiElemento.getId('intervalo').value;
+		this.tamanho=Number(MitiElemento.getId('tamanho').value);
 		
 		if(MitiElemento.getId('continuidade').disabled){
-			LangtonsAnt.continuidade=true;
+			this.continuidade=true;
 		}else{
-			LangtonsAnt.continuidade=false;
+			this.continuidade=false;
 		}
 		
 		if(MitiElemento.getId('fertilidade').disabled){
-			LangtonsAnt.fertilidade=true;
+			this.fertilidade=true;
 		}else{
-			LangtonsAnt.fertilidade=false;
+			this.fertilidade=false;
 		}
-		
+	};
+	
+	this.anexarEventosAosControles=function(){
 		MitiElemento.getTag('canvas')[0].onclick=function(e){
 			LangtonsAnt.maximoX=e.currentTarget.clientWidth-4;
 			LangtonsAnt.maximoY=e.currentTarget.clientHeight-4;
@@ -58,7 +66,11 @@ function LangtonsAnt(){
 		MitiElemento.getId('intervalo').onchange=function(){
 			LangtonsAnt.intervalo=this.value;
 		};
-	});
+		
+		MitiElemento.getId('tamanho').onchange=function(){
+			LangtonsAnt.tamanho=Number(this.value);
+		};
+	};
 	
 	this.criarFormiga=function(x,y,painel){
 		this.quantidade++;
@@ -75,6 +87,8 @@ function LangtonsAnt(){
 		this.definirDirecaoInicial(Movimento);
 		
 		var CoordenadaAtual={x:x,y:y};
+		CoordenadaAtual.x=this.ajustarParaMultiploX(CoordenadaAtual.x);
+		CoordenadaAtual.y=this.ajustarParaMultiploY(CoordenadaAtual.y);
 		var pixel=Context.getImageData(CoordenadaAtual.x,CoordenadaAtual.y,1,1).data;
 		
 		setInterval(
@@ -123,46 +137,46 @@ function LangtonsAnt(){
 	};
 	
 	this.obterAleatorioX=function(){
-		return Math.floor((Math.random()*this.maximoX)+1);
+		return this.ajustarParaMultiploX(Math.floor((Math.random()*this.maximoX)+1));
 	};
 	
 	this.obterAleatorioY=function(){
-		return Math.floor((Math.random()*this.maximoY)+1);
+		return this.ajustarParaMultiploY(Math.floor((Math.random()*this.maximoY)+1));
 	};
 	
 	this.andarParaDireita=function(CoordenadaAtual,Movimento){
 		if(Movimento.esquerda===true){
-			if(CoordenadaAtual.y===0){
-				CoordenadaAtual.y=this.maximoY;
+			if(CoordenadaAtual.y<this.tamanho){
+				CoordenadaAtual.y=this.maximoY-this.tamanho;
 			}else{
-				CoordenadaAtual.y--;
+				CoordenadaAtual.y-=this.tamanho;
 			}
 			
 			Movimento.esquerda=false;
 			Movimento.cima=true;
 		}else if(Movimento.cima===true){
-			if(CoordenadaAtual.x===this.maximoX){
+			if(CoordenadaAtual.x>this.maximoX-this.tamanho*2){
 				CoordenadaAtual.x=0;
 			}else{
-				CoordenadaAtual.x++;
+				CoordenadaAtual.x+=this.tamanho;
 			}
 			
 			Movimento.cima=false;
 			Movimento.direita=true;
 		}else if(Movimento.direita===true){
-			if(CoordenadaAtual.y===this.maximoY){
+			if(CoordenadaAtual.y>this.maximoY-this.tamanho*2){
 				CoordenadaAtual.y=0;
 			}else{
-				CoordenadaAtual.y++;
+				CoordenadaAtual.y+=this.tamanho;
 			}
 			
 			Movimento.direita=false;
 			Movimento.baixo=true;
 		}else if(Movimento.baixo===true){
-			if(CoordenadaAtual.x===0){
-				CoordenadaAtual.x=this.maximoX;
+			if(CoordenadaAtual.x<this.tamanho){
+				CoordenadaAtual.x=this.maximoX-this.tamanho;
 			}else{
-				CoordenadaAtual.x--;
+				CoordenadaAtual.x-=this.tamanho;
 			}
 			
 			Movimento.baixo=false;
@@ -172,37 +186,37 @@ function LangtonsAnt(){
 	
 	this.andarParaEsquerda=function(CoordenadaAtual,Movimento){
 		if(Movimento.esquerda===true){
-			if(CoordenadaAtual.y===this.maximoY){
+			if(CoordenadaAtual.y>this.maximoY-this.tamanho*2){
 				CoordenadaAtual.y=0;
 			}else{
-				CoordenadaAtual.y++;
+				CoordenadaAtual.y+=this.tamanho;
 			}
 			
 			Movimento.esquerda=false;
 			Movimento.baixo=true;
 		}else if(Movimento.cima===true){
-			if(CoordenadaAtual.x===0){
-				CoordenadaAtual.x=this.maximoX;
+			if(CoordenadaAtual.x<this.tamanho){
+				CoordenadaAtual.x=this.maximoX-this.tamanho;
 			}else{
-				CoordenadaAtual.x--;
+				CoordenadaAtual.x-=this.tamanho;
 			}
 			
 			Movimento.cima=false;
 			Movimento.esquerda=true;
 		}else if(Movimento.direita===true){
-			if(CoordenadaAtual.y===0){
-				CoordenadaAtual.y=this.maximoY;
+			if(CoordenadaAtual.y<this.tamanho){
+				CoordenadaAtual.y=this.maximoY-this.tamanho;
 			}else{
-				CoordenadaAtual.y--;
+				CoordenadaAtual.y-=this.tamanho;
 			}
 			
 			Movimento.direita=false;
 			Movimento.cima=true;
 		}else if(Movimento.baixo===true){
-			if(CoordenadaAtual.x===this.maximoX){
+			if(CoordenadaAtual.x>this.maximoX-this.tamanho*2){
 				CoordenadaAtual.x=0;
 			}else{
-				CoordenadaAtual.x++;
+				CoordenadaAtual.x+=this.tamanho;
 			}
 			
 			Movimento.baixo=false;
@@ -212,7 +226,7 @@ function LangtonsAnt(){
 	
 	this.colorir=function(Context,cor,Coordenada){
 		Context.fillStyle=cor;
-		Context.fillRect(Coordenada.x,Coordenada.y,1,1);
+		Context.fillRect(Coordenada.x,Coordenada.y,this.tamanho,this.tamanho);
 		this.indicarPosicao(Context,cor,Coordenada);
 	};
 	
@@ -221,8 +235,8 @@ function LangtonsAnt(){
 			Context.fillStyle='black';
 		}
 
-		Context.fillRect(Coordenada.x,this.maximoY+1,1,3);
-		Context.fillRect(this.maximoX+1,Coordenada.y,3,1);
+		Context.fillRect(Coordenada.x,this.maximoY+1,this.tamanho,3);
+		Context.fillRect(this.maximoX+1,Coordenada.y,3,this.tamanho);
 	};
 	
 	this.obterIteracoesDoUltimoSegundo=function(){
@@ -265,5 +279,29 @@ function LangtonsAnt(){
 		}else if(aleatorio===4){
 			Movimento.esquerda=true;
 		}
+	};
+	
+	this.ajustarParaMultiploX=function(x){
+		for(var i=1;i<=this.tamanho;i++){
+			if(x%this.tamanho!==0){
+				x++;
+			}else{
+				break;
+			}
+		}
+		
+		return x;
+	};
+	
+	this.ajustarParaMultiploY=function(y){
+		for(var i=1;i<=this.tamanho;i++){
+			if(y%this.tamanho!==0){
+				y++;
+			}else{
+				break;
+			}
+		}
+		
+		return y;
 	};
 }
