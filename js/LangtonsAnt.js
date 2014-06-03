@@ -1,11 +1,29 @@
 function LangtonsAnt(){
-	this.execucao=true;
+	this.continuidade;
+	this.fertilidade;
 	this.intervalo;
 	this.quantidade=0;
+	this.quantidadeFilhotes=0;
 	this.maximoX;
 	this.maximoY;
 	
 	MitiPadrao.iniciar(function(){
+		alert('Clique para criar formigas.');
+		
+		LangtonsAnt.intervalo=MitiElemento.getId('intervalo').value;
+		
+		if(MitiElemento.getId('continuidade').disabled){
+			LangtonsAnt.continuidade=true;
+		}else{
+			LangtonsAnt.continuidade=false;
+		}
+		
+		if(MitiElemento.getId('fertilidade').disabled){
+			LangtonsAnt.fertilidade=true;
+		}else{
+			LangtonsAnt.fertilidade=false;
+		}
+		
 		MitiElemento.getTag('canvas')[0].onclick=function(e){
 			LangtonsAnt.maximoX=e.currentTarget.clientWidth-4;
 			LangtonsAnt.maximoY=e.currentTarget.clientHeight-4;
@@ -14,11 +32,27 @@ function LangtonsAnt(){
 		};
 		
 		MitiElemento.getId('parada').onclick=function(){
-			LangtonsAnt.execucao=false;
+			LangtonsAnt.continuidade=false;
+			this.setAttribute('disabled','disabled');
+			MitiElemento.getId('continuidade').removeAttribute('disabled');
 		};
 		
-		MitiElemento.getId('continuacao').onclick=function(){
-			LangtonsAnt.execucao=true;
+		MitiElemento.getId('continuidade').onclick=function(){
+			LangtonsAnt.continuidade=true;
+			this.setAttribute('disabled','disabled');
+			MitiElemento.getId('parada').removeAttribute('disabled');
+		};
+		
+		MitiElemento.getId('esterilidade').onclick=function(){
+			LangtonsAnt.fertilidade=false;
+			this.setAttribute('disabled','disabled');
+			MitiElemento.getId('fertilidade').removeAttribute('disabled');
+		};
+		
+		MitiElemento.getId('fertilidade').onclick=function(){
+			LangtonsAnt.fertilidade=true;
+			this.setAttribute('disabled','disabled');
+			MitiElemento.getId('esterilidade').removeAttribute('disabled');
 		};
 		
 		MitiElemento.getId('intervalo').onchange=function(){
@@ -27,8 +61,6 @@ function LangtonsAnt(){
 	});
 	
 	this.criarFormiga=function(x,y,painel){
-		this.intervalo=MitiElemento.getId('intervalo').value;
-		
 		this.quantidade++;
 		var Quantidade=MitiElemento.getId('quantidade');
 		Quantidade.innerHTML=this.quantidade;
@@ -47,7 +79,7 @@ function LangtonsAnt(){
 		
 		setInterval(
 			function(){
-				if(LangtonsAnt.execucao){
+				if(LangtonsAnt.continuidade){
 					UltimaCoordenada={x:CoordenadaAtual.x,y:CoordenadaAtual.y};
 
 					if(pixel[0]===0){
@@ -77,9 +109,15 @@ function LangtonsAnt(){
 		if(pixel[1]===0){
 			CoordenadaAtual.x=this.obterAleatorioX();
 			CoordenadaAtual.y=this.obterAleatorioY();
-			
+			this.procriar(painel);
+		}
+	};
+	
+	this.procriar=function(painel){
+		if(this.fertilidade){
 			var filhoX=this.obterAleatorioX();
 			var filhoY=this.obterAleatorioY();
+			MitiElemento.getId('filhote').innerHTML=++this.quantidadeFilhotes;
 			this.criarFormiga(filhoX,filhoY,painel);
 		}
 	};
@@ -201,7 +239,7 @@ function LangtonsAnt(){
 		
 		setInterval(
 			function(){
-				if(LangtonsAnt.execucao){
+				if(LangtonsAnt.continuidade){
 					Segundo.innerHTML=++segundos;
 
 					FPS.innerHTML=Iteracao.innerHTML-totalDeIteracoes;

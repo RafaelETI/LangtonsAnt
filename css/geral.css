@@ -9,10 +9,9 @@
 }
 
 body{
-	display:none;
 	background:black;
 	color:white;
-	font:20px/30px VT323;
+	font:18px/30px VT323;
 }
 
 canvas{
@@ -22,8 +21,6 @@ canvas{
 }
 
 input{
-	background:black;
-	color:white;
 	font-family:VT323;
 }
 
