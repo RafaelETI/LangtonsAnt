@@ -3,7 +3,7 @@
 <head>
 <meta charset="windows-1252" />
 
-<title>Langton's Ant 1.9.2</title>
+<title>Langton's Ant 1.10.2</title>
 
 <meta name="author" content="Rafael Barros" />
 <link rel="shortcut icon" type="image/png" href="../img/fav.png" />
@@ -37,18 +37,18 @@ var LangtonsAnt=new LangtonsAnt;
 	
 	&bull;
 	
-	<input type="button" id="esterilidade" value="Esterilizar" />
-	<input type="button" id="fertilidade" value="Fertilizar" disabled="disabled" />
+	<input type="button" id="fertilidade" value="Fertilizar" />
+	<input type="button" id="esterilidade" value="Esterilizar" disabled="disabled" />
 
 	&bull;
 	
 	Intervalo:
-	<input type="range" id="intervalo" value="1" min="1" max="300" step="10" />
+	<input type="range" id="intervalo" value="1" min="1" max="500" step="5" />
 	
 	&bull;
 	
 	Tamanho:
-	<input type="range" id="tamanho" value="1" min="1" max="5" />
+	<input type="range" id="tamanho" value="1" min="1" max="10" />
 </div>
 </body>
 </html>

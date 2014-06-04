@@ -121,8 +121,8 @@ function LangtonsAnt(){
 	
 	this.teleportar=function(CoordenadaAtual,pixel,painel){
 		if(pixel[1]===0){
-			CoordenadaAtual.x=this.obterAleatorioX();
-			CoordenadaAtual.y=this.obterAleatorioY();
+			CoordenadaAtual.x=this.ajustarParaMultiploX(this.obterAleatorioX());
+			CoordenadaAtual.y=this.ajustarParaMultiploY(this.obterAleatorioY());
 			this.procriar(painel);
 		}
 	};
@@ -147,7 +147,7 @@ function LangtonsAnt(){
 	this.andarParaDireita=function(CoordenadaAtual,Movimento){
 		if(Movimento.esquerda===true){
 			if(CoordenadaAtual.y<this.tamanho){
-				CoordenadaAtual.y=this.maximoY-this.tamanho;
+				CoordenadaAtual.y=this.ajustarParaMultiploY(this.maximoY-this.tamanho);
 			}else{
 				CoordenadaAtual.y-=this.tamanho;
 			}
@@ -174,7 +174,7 @@ function LangtonsAnt(){
 			Movimento.baixo=true;
 		}else if(Movimento.baixo===true){
 			if(CoordenadaAtual.x<this.tamanho){
-				CoordenadaAtual.x=this.maximoX-this.tamanho;
+				CoordenadaAtual.x=this.ajustarParaMultiploX(this.maximoX-this.tamanho);
 			}else{
 				CoordenadaAtual.x-=this.tamanho;
 			}
@@ -196,7 +196,7 @@ function LangtonsAnt(){
 			Movimento.baixo=true;
 		}else if(Movimento.cima===true){
 			if(CoordenadaAtual.x<this.tamanho){
-				CoordenadaAtual.x=this.maximoX-this.tamanho;
+				CoordenadaAtual.x=this.ajustarParaMultiploX(this.maximoX-this.tamanho);
 			}else{
 				CoordenadaAtual.x-=this.tamanho;
 			}
@@ -205,7 +205,7 @@ function LangtonsAnt(){
 			Movimento.esquerda=true;
 		}else if(Movimento.direita===true){
 			if(CoordenadaAtual.y<this.tamanho){
-				CoordenadaAtual.y=this.maximoY-this.tamanho;
+				CoordenadaAtual.y=this.ajustarParaMultiploY(this.maximoY-this.tamanho);
 			}else{
 				CoordenadaAtual.y-=this.tamanho;
 			}
@@ -284,7 +284,7 @@ function LangtonsAnt(){
 	this.ajustarParaMultiploX=function(x){
 		for(var i=1;i<=this.tamanho;i++){
 			if(x%this.tamanho!==0){
-				x++;
+				x--;
 			}else{
 				break;
 			}
@@ -296,7 +296,7 @@ function LangtonsAnt(){
 	this.ajustarParaMultiploY=function(y){
 		for(var i=1;i<=this.tamanho;i++){
 			if(y%this.tamanho!==0){
-				y++;
+				y--;
 			}else{
 				break;
 			}
