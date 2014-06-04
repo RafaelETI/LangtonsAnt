@@ -1,12 +1,12 @@
 function LangtonsAnt(){
-	this.continuidade;
-	this.fertilidade;
+	this.continuidade=true;
+	this.fertilidade=false;
 	this.intervalo;
-	this.quantidade=0;
-	this.quantidadeFilhotes=0;
+	this.tamanho;
 	this.maximoX;
 	this.maximoY;
-	this.tamanho;
+	this.quantidade=0;
+	this.quantidadeFilhotes=0;
 	
 	MitiPadrao.iniciar(function(){
 		alert('Clique para criar formigas.');
@@ -15,27 +15,22 @@ function LangtonsAnt(){
 	});
 	
 	this.obterControles=function(){
-		this.intervalo=MitiElemento.getId('intervalo').value;
-		this.tamanho=Number(MitiElemento.getId('tamanho').value);
-		
-		if(MitiElemento.getId('continuidade').disabled){
-			this.continuidade=true;
-		}else{
+		if(!MitiElemento.getId('continuidade').disabled){
 			this.continuidade=false;
 		}
 		
 		if(MitiElemento.getId('fertilidade').disabled){
 			this.fertilidade=true;
-		}else{
-			this.fertilidade=false;
 		}
+		
+		this.intervalo=MitiElemento.getId('intervalo').value;
+		this.tamanho=Number(MitiElemento.getId('tamanho').value);
+		this.maximoX=MitiElemento.getTag('canvas')[0].width-4;
+		this.maximoY=MitiElemento.getTag('canvas')[0].height-4;
 	};
 	
 	this.anexarEventosAosControles=function(){
 		MitiElemento.getTag('canvas')[0].onclick=function(e){
-			LangtonsAnt.maximoX=e.currentTarget.clientWidth-4;
-			LangtonsAnt.maximoY=e.currentTarget.clientHeight-4;
-			
 			LangtonsAnt.criarFormiga(e.pageX,e.pageY,this);
 		};
 		
@@ -86,9 +81,11 @@ function LangtonsAnt(){
 		var Movimento={cima:false,direita:false,baixo:false,esquerda:false};
 		this.definirDirecaoInicial(Movimento);
 		
-		var CoordenadaAtual={x:x,y:y};
-		CoordenadaAtual.x=this.ajustarParaMultiploX(CoordenadaAtual.x);
-		CoordenadaAtual.y=this.ajustarParaMultiploY(CoordenadaAtual.y);
+		var CoordenadaAtual={
+			x:this.ajustarParaMultiplo(x),
+			y:this.ajustarParaMultiplo(y)
+		};
+		var UltimaCoordenada;
 		var pixel=Context.getImageData(CoordenadaAtual.x,CoordenadaAtual.y,1,1).data;
 		
 		setInterval(
@@ -117,126 +114,6 @@ function LangtonsAnt(){
 			
 			,this.intervalo
 		);
-	};
-	
-	this.teleportar=function(CoordenadaAtual,pixel,painel){
-		if(pixel[1]===0){
-			CoordenadaAtual.x=this.ajustarParaMultiploX(this.obterAleatorioX());
-			CoordenadaAtual.y=this.ajustarParaMultiploY(this.obterAleatorioY());
-			this.procriar(painel);
-		}
-	};
-	
-	this.procriar=function(painel){
-		if(this.fertilidade){
-			var filhoX=this.obterAleatorioX();
-			var filhoY=this.obterAleatorioY();
-			MitiElemento.getId('filhote').innerHTML=++this.quantidadeFilhotes;
-			this.criarFormiga(filhoX,filhoY,painel);
-		}
-	};
-	
-	this.obterAleatorioX=function(){
-		return this.ajustarParaMultiploX(Math.floor((Math.random()*this.maximoX)+1));
-	};
-	
-	this.obterAleatorioY=function(){
-		return this.ajustarParaMultiploY(Math.floor((Math.random()*this.maximoY)+1));
-	};
-	
-	this.andarParaDireita=function(CoordenadaAtual,Movimento){
-		if(Movimento.esquerda===true){
-			if(CoordenadaAtual.y<this.tamanho){
-				CoordenadaAtual.y=this.ajustarParaMultiploY(this.maximoY-this.tamanho);
-			}else{
-				CoordenadaAtual.y-=this.tamanho;
-			}
-			
-			Movimento.esquerda=false;
-			Movimento.cima=true;
-		}else if(Movimento.cima===true){
-			if(CoordenadaAtual.x>this.maximoX-this.tamanho*2){
-				CoordenadaAtual.x=0;
-			}else{
-				CoordenadaAtual.x+=this.tamanho;
-			}
-			
-			Movimento.cima=false;
-			Movimento.direita=true;
-		}else if(Movimento.direita===true){
-			if(CoordenadaAtual.y>this.maximoY-this.tamanho*2){
-				CoordenadaAtual.y=0;
-			}else{
-				CoordenadaAtual.y+=this.tamanho;
-			}
-			
-			Movimento.direita=false;
-			Movimento.baixo=true;
-		}else if(Movimento.baixo===true){
-			if(CoordenadaAtual.x<this.tamanho){
-				CoordenadaAtual.x=this.ajustarParaMultiploX(this.maximoX-this.tamanho);
-			}else{
-				CoordenadaAtual.x-=this.tamanho;
-			}
-			
-			Movimento.baixo=false;
-			Movimento.esquerda=true;
-		}
-	};
-	
-	this.andarParaEsquerda=function(CoordenadaAtual,Movimento){
-		if(Movimento.esquerda===true){
-			if(CoordenadaAtual.y>this.maximoY-this.tamanho*2){
-				CoordenadaAtual.y=0;
-			}else{
-				CoordenadaAtual.y+=this.tamanho;
-			}
-			
-			Movimento.esquerda=false;
-			Movimento.baixo=true;
-		}else if(Movimento.cima===true){
-			if(CoordenadaAtual.x<this.tamanho){
-				CoordenadaAtual.x=this.ajustarParaMultiploX(this.maximoX-this.tamanho);
-			}else{
-				CoordenadaAtual.x-=this.tamanho;
-			}
-			
-			Movimento.cima=false;
-			Movimento.esquerda=true;
-		}else if(Movimento.direita===true){
-			if(CoordenadaAtual.y<this.tamanho){
-				CoordenadaAtual.y=this.ajustarParaMultiploY(this.maximoY-this.tamanho);
-			}else{
-				CoordenadaAtual.y-=this.tamanho;
-			}
-			
-			Movimento.direita=false;
-			Movimento.cima=true;
-		}else if(Movimento.baixo===true){
-			if(CoordenadaAtual.x>this.maximoX-this.tamanho*2){
-				CoordenadaAtual.x=0;
-			}else{
-				CoordenadaAtual.x+=this.tamanho;
-			}
-			
-			Movimento.baixo=false;
-			Movimento.direita=true;
-		}
-	};
-	
-	this.colorir=function(Context,cor,Coordenada){
-		Context.fillStyle=cor;
-		Context.fillRect(Coordenada.x,Coordenada.y,this.tamanho,this.tamanho);
-		this.indicarPosicao(Context,cor,Coordenada);
-	};
-	
-	this.indicarPosicao=function(Context,cor,Coordenada){
-		if(cor==='white'){
-			Context.fillStyle='black';
-		}
-
-		Context.fillRect(Coordenada.x,this.maximoY+1,this.tamanho,3);
-		Context.fillRect(this.maximoX+1,Coordenada.y,3,this.tamanho);
 	};
 	
 	this.obterIteracoesDoUltimoSegundo=function(){
@@ -281,27 +158,131 @@ function LangtonsAnt(){
 		}
 	};
 	
-	this.ajustarParaMultiploX=function(x){
-		for(var i=1;i<=this.tamanho;i++){
-			if(x%this.tamanho!==0){
-				x--;
+	this.andarParaDireita=function(CoordenadaAtual,Movimento){
+		if(Movimento.esquerda===true){
+			if(CoordenadaAtual.y<this.tamanho){
+				CoordenadaAtual.y=this.ajustarParaMultiplo(this.maximoY-this.tamanho);
 			}else{
-				break;
+				CoordenadaAtual.y-=this.tamanho;
 			}
+			
+			Movimento.esquerda=false;
+			Movimento.cima=true;
+		}else if(Movimento.cima===true){
+			if(CoordenadaAtual.x>this.maximoX-this.tamanho*2){
+				CoordenadaAtual.x=0;
+			}else{
+				CoordenadaAtual.x+=this.tamanho;
+			}
+			
+			Movimento.cima=false;
+			Movimento.direita=true;
+		}else if(Movimento.direita===true){
+			if(CoordenadaAtual.y>this.maximoY-this.tamanho*2){
+				CoordenadaAtual.y=0;
+			}else{
+				CoordenadaAtual.y+=this.tamanho;
+			}
+			
+			Movimento.direita=false;
+			Movimento.baixo=true;
+		}else if(Movimento.baixo===true){
+			if(CoordenadaAtual.x<this.tamanho){
+				CoordenadaAtual.x=this.ajustarParaMultiplo(this.maximoX-this.tamanho);
+			}else{
+				CoordenadaAtual.x-=this.tamanho;
+			}
+			
+			Movimento.baixo=false;
+			Movimento.esquerda=true;
 		}
-		
-		return x;
 	};
 	
-	this.ajustarParaMultiploY=function(y){
+	this.andarParaEsquerda=function(CoordenadaAtual,Movimento){
+		if(Movimento.esquerda===true){
+			if(CoordenadaAtual.y>this.maximoY-this.tamanho*2){
+				CoordenadaAtual.y=0;
+			}else{
+				CoordenadaAtual.y+=this.tamanho;
+			}
+			
+			Movimento.esquerda=false;
+			Movimento.baixo=true;
+		}else if(Movimento.cima===true){
+			if(CoordenadaAtual.x<this.tamanho){
+				CoordenadaAtual.x=this.ajustarParaMultiplo(this.maximoX-this.tamanho);
+			}else{
+				CoordenadaAtual.x-=this.tamanho;
+			}
+			
+			Movimento.cima=false;
+			Movimento.esquerda=true;
+		}else if(Movimento.direita===true){
+			if(CoordenadaAtual.y<this.tamanho){
+				CoordenadaAtual.y=this.ajustarParaMultiplo(this.maximoY-this.tamanho);
+			}else{
+				CoordenadaAtual.y-=this.tamanho;
+			}
+			
+			Movimento.direita=false;
+			Movimento.cima=true;
+		}else if(Movimento.baixo===true){
+			if(CoordenadaAtual.x>this.maximoX-this.tamanho*2){
+				CoordenadaAtual.x=0;
+			}else{
+				CoordenadaAtual.x+=this.tamanho;
+			}
+			
+			Movimento.baixo=false;
+			Movimento.direita=true;
+		}
+	};
+	
+	this.teleportar=function(CoordenadaAtual,pixel,painel){
+		if(pixel[1]===0){
+			CoordenadaAtual.x=this.obterCoordenadaAleatoria(this.maximoX);
+			CoordenadaAtual.y=this.obterCoordenadaAleatoria(this.maximoY);
+			this.procriar(painel);
+		}
+	};
+	
+	this.procriar=function(painel){
+		if(this.fertilidade){
+			var filhoX=this.obterCoordenadaAleatoria(this.maximoX);
+			var filhoY=this.obterCoordenadaAleatoria(this.maximoY);
+			MitiElemento.getId('filhote').innerHTML=++this.quantidadeFilhotes;
+			this.criarFormiga(filhoX,filhoY,painel);
+		}
+	};
+	
+	this.obterCoordenadaAleatoria=function(maxima){
+		return this.ajustarParaMultiplo(Math.floor((Math.random()*maxima)+1));
+	};
+	
+	this.colorir=function(Context,cor,Coordenada){
+		Context.fillStyle=cor;
+		Context.fillRect(Coordenada.x,Coordenada.y,this.tamanho,this.tamanho);
+		this.indicarPosicao(Context,cor,Coordenada);
+	};
+	
+	this.indicarPosicao=function(Context,cor,Coordenada){
+		if(cor==='white'){
+			Context.fillStyle='black';
+		}
+
+		Context.fillRect(Coordenada.x,this.maximoY+1,this.tamanho,3);
+		Context.fillRect(this.maximoX+1,Coordenada.y,3,this.tamanho);
+	};
+	
+	this.ajustarParaMultiplo=function(coordenada){
 		for(var i=1;i<=this.tamanho;i++){
-			if(y%this.tamanho!==0){
-				y--;
+			if(coordenada%this.tamanho!==0){
+				coordenada--;
 			}else{
 				break;
 			}
 		}
 		
-		return y;
+		return coordenada;
 	};
 }
