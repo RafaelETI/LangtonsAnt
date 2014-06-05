@@ -3,7 +3,7 @@
 <head>
 <meta charset="windows-1252" />
 
-<title>Langton's Ant 1.10.3</title>
+<title>Langton's Ant 1.10.4</title>
 
 <meta name="author" content="Rafael Barros" />
 <link rel="shortcut icon" type="image/png" href="../img/fav.png" />

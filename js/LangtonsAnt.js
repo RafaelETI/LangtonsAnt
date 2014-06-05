@@ -12,6 +12,7 @@ function LangtonsAnt(){
 		alert('Clique para criar formigas.');
 		LangtonsAnt.obterControles();
 		LangtonsAnt.anexarEventosAosControles();
+		MitiElemento.getId('tamanho').removeAttribute('disabled');
 	});
 	
 	this.obterControles=function(){
@@ -31,6 +32,7 @@ function LangtonsAnt(){
 	
 	this.anexarEventosAosControles=function(){
 		MitiElemento.getTag('canvas')[0].onclick=function(e){
+			MitiElemento.getId('tamanho').setAttribute('disabled','disabled');
 			LangtonsAnt.criarFormiga(e.pageX,e.pageY,this);
 		};
 		
@@ -78,7 +80,7 @@ function LangtonsAnt(){
 		var i=0;
 		var Context=painel.getContext('2d');
 		
-		var Movimento={cima:false,direita:false,baixo:false,esquerda:false};
+		var Movimento={direcao:null};
 		this.definirDirecaoInicial(Movimento);
 		
 		var CoordenadaAtual={
@@ -94,12 +96,12 @@ function LangtonsAnt(){
 					UltimaCoordenada={x:CoordenadaAtual.x,y:CoordenadaAtual.y};
 
 					if(pixel[0]===0){
-						LangtonsAnt.andarParaDireita(CoordenadaAtual,Movimento);
+						LangtonsAnt.andar(CoordenadaAtual,Movimento,90);
 						pixel=Context.getImageData(CoordenadaAtual.x,CoordenadaAtual.y,1,1).data;
 						LangtonsAnt.colorir(Context,'white',UltimaCoordenada);
 						LangtonsAnt.colorir(Context,'red',CoordenadaAtual);
 					}else{
-						LangtonsAnt.andarParaEsquerda(CoordenadaAtual,Movimento);
+						LangtonsAnt.andar(CoordenadaAtual,Movimento,-90);
 						LangtonsAnt.teleportar(CoordenadaAtual,pixel,painel);
 						pixel=Context.getImageData(CoordenadaAtual.x,CoordenadaAtual.y,1,1).data;
 						LangtonsAnt.colorir(Context,'black',UltimaCoordenada);
@@ -145,97 +147,49 @@ function LangtonsAnt(){
 	};
 	
 	this.definirDirecaoInicial=function(Movimento){
-		var aleatorio=Math.floor((Math.random()*4)+1);
+		Movimento.direcao=Math.floor(Math.random()*4)*90;
+	};
+	
+	this.andar=function(CoordenadaAtual,Movimento,giro){
+		if(
+			(giro===90&&Movimento.direcao===270)||
+			(giro===-90&&Movimento.direcao===90)
+		){
+			if(CoordenadaAtual.y<this.tamanho){
+				CoordenadaAtual.y=this.ajustarParaMultiplo(this.maximoY-this.tamanho);
+			}else{
+				CoordenadaAtual.y-=this.tamanho;
+			}
+		}else if(
+			(giro===90&&Movimento.direcao===0)||
+			(giro===-90&&Movimento.direcao===180)
+		){
+			if(CoordenadaAtual.x>this.maximoX-this.tamanho*2){
+				CoordenadaAtual.x=0;
+			}else{
+				CoordenadaAtual.x+=this.tamanho;
+			}
+		}else if(
+			(giro===90&&Movimento.direcao===90)||
+			(giro===-90&&Movimento.direcao===270)
+		){
+			if(CoordenadaAtual.y>this.maximoY-this.tamanho*2){
+				CoordenadaAtual.y=0;
+			}else{
+				CoordenadaAtual.y+=this.tamanho;
+			}
+		}else if(
+			(giro===90&&Movimento.direcao===180)||
+			(giro===-90&&Movimento.direcao===0)
+		){
+			if(CoordenadaAtual.x<this.tamanho){
+				CoordenadaAtual.x=this.ajustarParaMultiplo(this.maximoX-this.tamanho);
+			}else{
+				CoordenadaAtual.x-=this.tamanho;
+			}
+		}
 		
-		if(aleatorio===1){
-			Movimento.cima=true;
-		}else if(aleatorio===2){
-			Movimento.direita=true;
-		}else if(aleatorio===3){
-			Movimento.baixo=true;
-		}else if(aleatorio===4){
-			Movimento.esquerda=true;
-		}
-	};
-	
-	this.andarParaDireita=function(CoordenadaAtual,Movimento){
-		if(Movimento.esquerda===true){
-			if(CoordenadaAtual.y<this.tamanho){
-				CoordenadaAtual.y=this.ajustarParaMultiplo(this.maximoY-this.tamanho);
-			}else{
-				CoordenadaAtual.y-=this.tamanho;
-			}
-			
-			Movimento.esquerda=false;
-			Movimento.cima=true;
-		}else if(Movimento.cima===true){
-			if(CoordenadaAtual.x>this.maximoX-this.tamanho*2){
-				CoordenadaAtual.x=0;
-			}else{
-				CoordenadaAtual.x+=this.tamanho;
-			}
-			
-			Movimento.cima=false;
-			Movimento.direita=true;
-		}else if(Movimento.direita===true){
-			if(CoordenadaAtual.y>this.maximoY-this.tamanho*2){
-				CoordenadaAtual.y=0;
-			}else{
-				CoordenadaAtual.y+=this.tamanho;
-			}
-			
-			Movimento.direita=false;
-			Movimento.baixo=true;
-		}else if(Movimento.baixo===true){
-			if(CoordenadaAtual.x<this.tamanho){
-				CoordenadaAtual.x=this.ajustarParaMultiplo(this.maximoX-this.tamanho);
-			}else{
-				CoordenadaAtual.x-=this.tamanho;
-			}
-			
-			Movimento.baixo=false;
-			Movimento.esquerda=true;
-		}
-	};
-	
-	this.andarParaEsquerda=function(CoordenadaAtual,Movimento){
-		if(Movimento.esquerda===true){
-			if(CoordenadaAtual.y>this.maximoY-this.tamanho*2){
-				CoordenadaAtual.y=0;
-			}else{
-				CoordenadaAtual.y+=this.tamanho;
-			}
-			
-			Movimento.esquerda=false;
-			Movimento.baixo=true;
-		}else if(Movimento.cima===true){
-			if(CoordenadaAtual.x<this.tamanho){
-				CoordenadaAtual.x=this.ajustarParaMultiplo(this.maximoX-this.tamanho);
-			}else{
-				CoordenadaAtual.x-=this.tamanho;
-			}
-			
-			Movimento.cima=false;
-			Movimento.esquerda=true;
-		}else if(Movimento.direita===true){
-			if(CoordenadaAtual.y<this.tamanho){
-				CoordenadaAtual.y=this.ajustarParaMultiplo(this.maximoY-this.tamanho);
-			}else{
-				CoordenadaAtual.y-=this.tamanho;
-			}
-			
-			Movimento.direita=false;
-			Movimento.cima=true;
-		}else if(Movimento.baixo===true){
-			if(CoordenadaAtual.x>this.maximoX-this.tamanho*2){
-				CoordenadaAtual.x=0;
-			}else{
-				CoordenadaAtual.x+=this.tamanho;
-			}
-			
-			Movimento.baixo=false;
-			Movimento.direita=true;
-		}
+		Movimento.direcao=(Movimento.direcao+giro+360)%360;
 	};
 	
 	this.teleportar=function(CoordenadaAtual,pixel,painel){
